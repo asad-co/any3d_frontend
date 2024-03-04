@@ -1,0 +1,31 @@
+const loader = new GLTFLoader();
+
+loader.load(
+    './flagarm.gltf',
+    // 'tractor.glb',
+    (gltf=>{
+
+        const mesh = gltf.scene;
+
+        // Calculate the bounding box of the entire group
+        const groupBoundingBox = new THREE.Box3().setFromObject(mesh);
+
+    
+
+        const size = new THREE.Vector3();
+        groupBoundingBox.getSize(size);
+
+        // Calculate the scaling factor for model2
+        const target_size =10;
+        const scale = target_size / size.length();
+        mesh.scale.set(scale, scale, scale);
+
+        const newgroupBoundingBox = new THREE.Box3().setFromObject(mesh);
+        const groupCenter = new THREE.Vector3();
+        newgroupBoundingBox.getCenter(groupCenter);
+
+        // Move the group so that its center is at the scene's origin
+        mesh.position.sub(groupCenter);
+
+        scene.add(mesh);
+}))
